@@ -16,8 +16,8 @@ Sub StockPractice():
      'identify worksheet readd
       Dim ws As Worksheet
       
-      For Each ws In Worksheets
-   
+      For Each ws In ThisWorkbook.sheets
+           debug.print ws.name
 
         'identify lastrow
             lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
