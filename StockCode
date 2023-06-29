@@ -31,20 +31,15 @@ Sub StockPractice():
 
 
         'track numbers for each new column
-
             Dim newColumnRow As Integer
-
             newColumnRow = 2
-       
             totalStock = 0
             
         'Loop through entire column
             Dim i As Long
-            
             For i = 2 To lastrow
 
             'set total_stock
-
             totalStock = Cells(i, 7).Value + totalStock
     
             'select the opening and closing price, based on the first and last days of the years 2018-2020
@@ -77,16 +72,12 @@ Sub StockPractice():
                          
                 'add a new row and restart the loop with the DIfferent ticker and all the numbers reset to 0.
             
-            If Cells(i + 1, 1).Value <> ticker Then
-
-
-                        'calculate closing price
-                        
-                    
-               If Cells(i, 2).Value = year1c Or Cells(i, 2).Value = year2c Or Cells(i, 2).Value = year3c Then
+                  If Cells(i + 1, 1).Value <> ticker Then
+                       'calculate closing price
+        
+                      If Cells(i, 2).Value = year1c Or Cells(i, 2).Value = year2c Or Cells(i, 2).Value = year3c Then
                         closingPrice = Cells(i, 6).Value
                         End If
-                        
                         
                 yearlyChange = closingPrice - openingPrice
                 percentChange = yearlyChange / openingPrice
@@ -99,7 +90,7 @@ Sub StockPractice():
                     
 
                     
-                    'define new ticker
+                  'define new ticker
                      ticker = Cells(i + 1, 1).Value
                     
                 'reset total stock to 0
@@ -116,9 +107,7 @@ Sub StockPractice():
                
                 End If
             Next i
-    
-     
-     
+   
      'Add functionality to your script to return the stock with:
      ' "Greatest % increase", "Greatest % decrease", and "Greatest total volume".
      
@@ -127,34 +116,38 @@ Sub StockPractice():
         Range("o4").Value = "Greatest Total Volume"
         
      'print ticker for maximum (or greatest increase) value in column K and minimum (or greatest decrease).
-     
-     
+ 
      Dim mx As Double
      Dim mn As Double
      Dim maxTotal As Double
+     Dim x As Long
+    Dim lastrow As Long
      
-     
+      'set range for column k to find greatest increase and decrease
+        For x = 2 To lastrow
+      
+'print ticker for maximum (or greatest increase) value in column K and minimum (or greatest decrease).
+          mx = Cells(x, 11).Value
+       If mx < Cells(x + 1, 11).Value Then
+          mx = Cells(x + 1, 11).Value
         
-        'max and min percent
-     mx = Application.WorksheetFunction.Max(Range("k2:K").Value)
-     mn = Application.WorksheetFunction.min(Range("k2:K").Value)
-     
-     maxTotal = Application.WorksheetFunction.Max(Range("L2:L").ValueL)
-     
-    
-    Range("p2") = ticker
-    Range("q2") = mx
+      ElseIf mx > Cells(x + 1, 11).Value Then
+              mx = Cells(x, 11).Value
+      End If
+      
+        'print value in cell Q2 
+        Range("q2").Value = mx
 
-     
-    Range("p3") = ticker
-    Range("q3") = mn
-    
-    Range("p4") = ticker
-    Range("q4") = maxTotal
-    
-    
-    
-        Next ws
+          mn = Cells(x, 11).Value
+       If mn > Cells(x + 1, 11).Value Then
+          mn = Cells(x + 1, 11).Value
 
+        ElseIf mn < Cells(x + 1, 11).Value Then
+         mn = Cells(x, 11).Value
+        End If
+      'print value
+      Range("q3").Value = mx
 
+      Next x
+  Next 
 End Sub
