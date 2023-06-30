@@ -11,9 +11,8 @@ Sub StockPractice():
     Dim yearlyChange As Double
     Dim percentChange As Double
     Dim totalStock As Double
-    
 
-     'identify worksheet readd
+     'identify worksheet
       Dim ws As Worksheet
       
       For Each ws In ThisWorkbook.Sheets
@@ -23,7 +22,6 @@ Sub StockPractice():
             lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
       
         'add columns names to sheet
-
         Range("i1").Value = "Ticker"  '9
         Range("j1").Value = "Yearly Change"  '10
         Range("k1").Value = "Percent Change"  '11
