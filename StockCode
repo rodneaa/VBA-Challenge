@@ -16,8 +16,8 @@ Sub StockPractice():
      'identify worksheet readd
       Dim ws As Worksheet
       
-      For Each ws In ThisWorkbook.sheets
-           debug.print ws.name
+      For Each ws In ThisWorkbook.Sheets
+           Debug.Print ws.Name
 
         'identify lastrow
             lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
@@ -107,7 +107,7 @@ Sub StockPractice():
                
                 End If
             Next i
-   
+  
      'Add functionality to your script to return the stock with:
      ' "Greatest % increase", "Greatest % decrease", and "Greatest total volume".
      
@@ -120,34 +120,45 @@ Sub StockPractice():
      Dim mx As Double
      Dim mn As Double
      Dim maxTotal As Double
-     Dim x As Long
-    Dim lastrow As Long
+     Dim r As Range
+     Dim L As Range
+
      
       'set range for column k to find greatest increase and decrease
-        For x = 2 To lastrow
+      Set r = Range("K2:K" & Rows.Count)
+    mn = Application.WorksheetFunction.Min(r)
+    Range("Q3").Value = mn
+    Range("q3").NumberFormat = "##.##%"
+    
+    
+   mx = Application.WorksheetFunction.Max(r)
+    Range("Q2").Value = mx
+    Range("q2").NumberFormat = "##.##%"
       
-'print ticker for maximum (or greatest increase) value in column K and minimum (or greatest decrease).
-          mx = Cells(x, 11).Value
-       If mx < Cells(x + 1, 11).Value Then
-          mx = Cells(x + 1, 11).Value
+        Set L = Range("L2:L" & Rows.Count)
+    maxTotal = Application.WorksheetFunction.Max(L)
+    Range("Q4").Value = maxTotal
         
-      ElseIf mx > Cells(x + 1, 11).Value Then
-              mx = Cells(x, 11).Value
-      End If
-      
-        'print value in cell Q2 
-        Range("q2").Value = mx
-
-          mn = Cells(x, 11).Value
-       If mn > Cells(x + 1, 11).Value Then
-          mn = Cells(x + 1, 11).Value
-
-        ElseIf mn < Cells(x + 1, 11).Value Then
-         mn = Cells(x, 11).Value
-        End If
-      'print value
-      Range("q3").Value = mx
-
-      Next x
-  Next 
+        'Identify variables for final loop
+        Dim x As Integer
+        For x = 2 To lastrow
+        
+        Dim new_ticker As String
+        new_ticker = Cells(x, 9).Value
+        
+           If Cells(x, 11).Value = mx Then
+           Range("p2").Value = new_ticker
+           
+           ElseIf Cells(x, 11).Value = mn Then
+           Range("p3").Value = new_ticker
+           
+           ElseIf Cells(x, 12).Value = maxTotal Then
+           Range("p4").Value = new_ticker
+           
+           
+           End If
+        Next x
+        
+    Next ws
+    
 End Sub
