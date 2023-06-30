@@ -1,0 +1,161 @@
+Sub StockPractice():
+
+  'Identify  variables
+
+    Dim ticker As String
+    Dim opening_date As Double
+    Dim closing_date As Double
+    Dim openingPrice As Double
+    Dim closingPrice As Double
+    Dim columnNames As String
+    Dim yearlyChange As Double
+    Dim percentChange As Double
+    Dim totalStock As Double
+
+     'identify worksheet
+      Dim ws As Worksheet
+      
+      For Each ws In ThisWorkbook.Sheets
+           Debug.Print ws.Name
+
+        'identify lastrow
+            lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+      
+        'add columns names to sheet
+        ws.Range("i1").Value = "Ticker"  '9
+        ws.Range("j1").Value = "Yearly Change"  '10
+        ws.Range("k1").Value = "Percent Change"  '11
+        ws.Range("L1").Value = "Total Stock Volume"  '12
+
+
+        'track numbers for each new column
+            Dim newColumnRow As Integer
+            newColumnRow = 2
+            totalStock = 0
+            
+        'Loop through entire column
+            Dim i As Long
+            For i = 2 To lastrow
+
+            'set total_stock
+            totalStock = ws.Cells(i, 7).Value + totalStock
+    
+            'select the opening and closing price, based on the first and last days of the years 2018-2020
+                'opening
+                Dim year1o As Long
+                Dim year2o As Long
+                Dim year3o As Long
+                
+                'closing
+                Dim year1c As Long
+                Dim year2c As Long
+                Dim year3c As Long
+                
+                'opening dates
+                year1o = 20180102
+                year2o = 20190102
+                year3o = 20200102
+                
+                'closing dates
+                year1c = 20181231
+                year2c = 20191231
+                year3c = 20201231
+                
+                ticker = ws.Cells(i, 1).Value
+            
+            If ws.Cells(i, 2).Value = year1o Or ws.Cells(i, 2).Value = year2o Or ws.Cells(i, 2).Value = year3o Then
+                        openingPrice = ws.Cells(i, 3).Value
+                         End If
+                         
+                         
+                'add a new row and restart the loop with the DIfferent ticker and all the numbers reset to 0.
+            
+                  If ws.Cells(i + 1, 1).Value <> ticker Then
+                       'calculate closing price
+        
+                      If ws.Cells(i, 2).Value = year1c Or ws.Cells(i, 2).Value = year2c Or ws.Cells(i, 2).Value = year3c Then
+                        closingPrice = ws.Cells(i, 6).Value
+                        End If
+                        
+                yearlyChange = closingPrice - openingPrice
+                percentChange = yearlyChange / openingPrice
+                
+                 'print ticker in I column, yearly in column J, percent column K and total value in column L
+                    ws.Range("i" & newColumnRow).Value = ticker
+                    ws.Range("J" & newColumnRow).Value = yearlyChange
+                    ws.Range("K" & newColumnRow).Value = percentChange
+                    ws.Range("L" & newColumnRow).Value = totalStock
+                    
+
+                    
+                  'define new ticker
+                     ticker = Cells(i + 1, 1).Value
+                    
+                'reset total stock to 0
+                totalStock = 0
+                newColumnRow = newColumnRow + 1
+                 
+            Else
+        
+                'set ticker names
+                totalStock = totalStock + ws.Cells(i, 7).Value
+                
+                'format column K as percentage
+                ws.Cells(i, 11).NumberFormat = ".##%"
+               
+                End If
+            Next i
+  
+
+     ' "Greatest % increase", "Greatest % decrease", and "Greatest total volume".
+     
+        ws.Range("o2").Value = "Greatest % Increase"
+        ws.Range("o3").Value = "Greatest % Decrease"
+        ws.Range("o4").Value = "Greatest Total Volume"
+        
+     'print ticker for maximum (or greatest increase) value in column K and minimum (or greatest decrease).
+ 
+     Dim mx As Double
+     Dim mn As Double
+     Dim maxTotal As Double
+     Dim r As Range
+     Dim L As Range
+
+     
+      'set range for column k to find greatest increase and decrease
+      Set r = ws.Range("K2:K" & Rows.Count)
+    mn = Application.WorksheetFunction.Min(r)
+    ws.Range("Q3").Value = mn
+    
+    
+   mx = Application.WorksheetFunction.Max(r)
+    ws.Range("Q2").Value = mx
+    ws.Range("q2:q3").NumberFormat = "##.##%"
+      
+        Set L = ws.Range("L2:L" & Rows.Count)
+    maxTotal = Application.WorksheetFunction.Max(L)
+    ws.Range("Q4").Value = maxTotal
+        
+        'Identify variables for final loop
+        Dim x As Long
+        For x = 2 To lastrow
+        
+        Dim new_ticker As String
+        new_ticker = ws.Cells(x, 9).Value
+        
+           If ws.Cells(x, 11).Value = mx Then
+           ws.Range("p2").Value = new_ticker
+           
+           ElseIf ws.Cells(x, 11).Value = mn Then
+           ws.Range("p3").Value = new_ticker
+           
+           ElseIf ws.Cells(x, 12).Value = maxTotal Then
+           ws.Range("p4").Value = new_ticker
+           
+           
+           End If
+        Next x
+        
+    Next ws
+    
+End Sub
